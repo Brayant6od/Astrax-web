@@ -1,11 +1,613 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// src/pages/index.astro
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Astrax Engine v2.0 | El Código del Cosmos</title>
+    <style is:global>
+        /* === FONDO CÓSMICO ULTRA REALISTA === */
+        body {
+            margin: 0; padding: 0;
+            background-color: #030108;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        /* Agujero Negro */
+        .black-hole {
+            position: fixed; top: -5%; right: -5%;
+            width: 250px; height: 250px;
+            border-radius: 50%;
+            background: #000;
+            box-shadow: 0 0 60px 15px rgba(255, 0, 60, 0.4), inset 0 0 40px rgba(0,0,0,1);
+            z-index: -3;
+            transform: scale(0.85);
+            animation: pulse-bh 6s infinite alternate ease-in-out;
+        }
+        .black-hole::before {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 320px; height: 60px; border-radius: 50%;
+            border: 6px solid rgba(255, 0, 60, 0.5);
+            transform: translate(-50%, -50%) rotate(-15deg);
+            filter: blur(4px);
+            animation: spin-disk 15s linear infinite;
+        }
+        .black-hole::after {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 400px; height: 80px; border-radius: 50%;
+            border: 2px solid rgba(255, 60, 100, 0.8);
+            border-top-color: transparent; border-bottom-color: rgba(255, 0, 60, 0.9);
+            transform: translate(-50%, -50%) rotate(-15deg);
+            box-shadow: 0 0 40px rgba(255, 0, 60, 0.6), inset 0 0 20px rgba(255, 0, 60, 0.4);
+            filter: blur(1px);
+            animation: spin-disk 10s linear infinite reverse;
+        }
+
+        /* Planeta con Anillos */
+        .planet-ringed {
+            position: fixed; bottom: 12%; left: 5%;
+            width: 160px; height: 160px; border-radius: 50%;
+            background: radial-gradient(circle at 25% 25%, #00f0ff 0%, #006680 40%, #030108 90%);
+            box-shadow: inset -30px -30px 50px rgba(0,0,0,0.9), 0 0 60px rgba(0,240,255,0.15);
+            z-index: -2; animation: float-slow 18s ease-in-out infinite;
+        }
+        .planet-ringed::before {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 320px; height: 70px; border-radius: 50%;
+            border: 12px solid rgba(0, 240, 255, 0.3);
+            border-top-color: rgba(0, 240, 255, 0.05); 
+            border-bottom-color: rgba(0, 240, 255, 0.7);
+            transform: translate(-50%, -50%) rotate(22deg);
+            box-shadow: 0 0 30px rgba(0,240,255,0.4);
+            filter: blur(1px);
+        }
+
+        /* Estrellas y Meteoros */
+        .distant-star {
+            position: fixed; top: 35%; left: 45%;
+            width: 12px; height: 12px; border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 0 60px 25px rgba(253, 245, 0, 0.8), 0 0 120px 50px rgba(253, 245, 0, 0.3);
+            z-index: -4; animation: twinkle 5s infinite alternate ease-in-out;
+        }
+        .shooting-star {
+            position: fixed; width: 200px; height: 2px;
+            background: linear-gradient(90deg, rgba(255,255,255,1), transparent);
+            z-index: -1; opacity: 0; transform: rotate(-45deg);
+            animation: shooting 7s infinite;
+        }
+        .shooting-star:nth-child(1) { top: 10%; right: 20%; animation-delay: 2s; }
+        .shooting-star:nth-child(2) { top: -10%; right: 50%; animation-delay: 5s; animation-duration: 9s; }
+
+        /* === NAVE ESPACIAL DINÁMICA === */
+        .spaceship-container {
+            position: fixed; left: 0; top: 0;
+            z-index: 40; opacity: 0.8;
+            filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.5));
+            cursor: pointer;
+            /* Variables iniciales por defecto (Reemplazadas por JS) */
+            --start-x: -200px; --start-y: 30vh;
+            --end-x: 120vw; --end-y: 10vh;
+            --rot: 60deg;
+            animation: fly-by 25s linear infinite;
+        }
+        
+        @keyframes fly-by {
+            0% { transform: translate(var(--start-x), var(--start-y)) rotate(var(--rot)) scale(0.65); opacity: 0; }
+            5% { opacity: 0.9; }
+            95% { opacity: 0.9; }
+            100% { transform: translate(var(--end-x), var(--end-y)) rotate(var(--rot)) scale(0.65); opacity: 0; }
+        }
+
+        /* Animaciones Globales */
+        @keyframes pulse-bh { 0% { transform: scale(0.85); box-shadow: 0 0 50px rgba(255,0,60,0.3); } 100% { transform: scale(0.88); box-shadow: 0 0 80px rgba(255,0,60,0.6); } }
+        @keyframes spin-disk { 100% { transform: translate(-50%, -50%) rotate(345deg); } }
+        @keyframes float-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-25px); } }
+        @keyframes twinkle { 0% { opacity: 0.6; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); } }
+        @keyframes shooting { 0% { transform: translate(100vw, -100px) rotate(-45deg); opacity: 1; } 20% { transform: translate(-100px, 100vh) rotate(-45deg); opacity: 0; } 100% { opacity: 0; } }
+
+        /* Lienzo interactivo */
+        #space-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -5; pointer-events: none; }
+
+        /* === COMPONENTES UI === */
+        .glass-panel { background: rgba(5, 2, 12, 0.6); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); }
+        .tab-content { display: none; opacity: 0; transition: opacity 0.4s ease-in-out; width: 100%; }
+        .tab-content.active { display: flex; flex-direction: column; opacity: 1; }
+        .tab-btn { position: relative; }
+        .tab-btn.active { color: #00f0ff; text-shadow: 0 0 12px rgba(0,240,255,0.6); }
+        .tab-btn.active::after { content: ''; position: absolute; bottom: 0; left: 20%; width: 60%; height: 2px; background: #00f0ff; box-shadow: 0 0 10px #00f0ff; border-radius: 2px; }
+
+        /* Animación AST */
+        .ast-step { transition: all 0.3s ease; }
+        .ast-glow { border-color: #00f0ff; box-shadow: 0 0 25px rgba(0,240,255,0.4); transform: scale(1.03); }
+        .ast-code-chunk { display: inline-block; padding: 4px 10px; margin: 4px; background: rgba(0,240,255,0.1); border: 1px solid #00f0ff; border-radius: 6px; font-family: monospace; font-size: 1em; opacity: 0; transform: translateY(10px); transition: all 0.3s; }
+        .ast-code-chunk.visible { opacity: 1; transform: translateY(0); }
+        
+        .typing-cursor::after { content: '█'; animation: blink 1s step-start infinite; color: #00f0ff; margin-left: 4px; }
+        @keyframes blink { 50% { opacity: 0; } }
+    </style>
+</head>
+<body class="selection:bg-cyan-500/30 selection:text-cyan-100">
+
+    <div class="black-hole"></div>
+    <div class="planet-ringed"></div>
+    <div class="distant-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    
+    <div class="spaceship-container" id="player-ship" onclick="warpJump()" title="¡Activar Hyperdrive!">
+        <svg width="100" height="140" viewBox="0 0 100 150">
+            <path d="M50 0 L80 80 L50 120 L20 80 Z" fill="#94a3b8"/>
+            <path d="M50 0 L80 80 L50 120 Z" fill="#cbd5e1"/>
+            <ellipse cx="50" cy="60" rx="12" ry="24" fill="#00f0ff"/>
+            <path d="M20 80 L0 120 L35 100 Z" fill="#64748b"/>
+            <path d="M80 80 L100 120 L65 100 Z" fill="#64748b"/>
+            <polygon points="40 120, 60 120, 50 155" fill="#ff003c" class="engine-flame" id="flame" style="transition: all 0.2s;">
+                <animate attributeName="points" values="40 120, 60 120, 50 155; 40 120, 60 120, 50 140; 40 120, 60 120, 50 155" dur="0.15s" repeatCount="indefinite"/>
+            </polygon>
+        </svg>
+    </div>
+
+    <canvas id="space-canvas"></canvas>
+
+    <nav class="fixed top-0 left-0 w-full z-50 glass-panel border-b-0 py-3 px-6 shadow-xl">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 w-full">
+            <div class="flex-1 flex items-center justify-center md:justify-start">
+                <svg viewBox="0 0 100 100" class="w-12 h-12 mr-3 drop-shadow-[0_0_12px_rgba(0,240,255,0.8)]">
+                    <defs>
+                        <linearGradient id="blue-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#00f0ff" />
+                            <stop offset="100%" stop-color="#0055ff" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M 15 65 Q 50 10 85 45" fill="none" stroke="#00f0ff" stroke-width="2" opacity="0.4" />
+                    <path d="M50 10 L20 80 L35 80 L50 40 L65 80 L80 80 Z" fill="url(#blue-grad)"/>
+                    <path d="M40 60 L60 60 L50 35 Z" fill="#030108" opacity="0.6"/>
+                    <path d="M 85 45 Q 50 90 15 65" fill="none" stroke="#00f0ff" stroke-width="4" stroke-linecap="round" filter="drop-shadow(0 0 5px #00f0ff)"/>
+                </svg>
+                <span class="text-2xl font-black tracking-widest text-white">ASTRAX<span class="text-cyan-400">IDE</span></span>
+            </div>
+            <div class="flex-none flex gap-4 md:gap-8 flex-wrap justify-center">
+                <button onclick="openTab('inicio', this)" class="tab-btn active pb-2 font-bold text-slate-300 hover:text-white transition-all text-sm tracking-wide">🚀 Inicio</button>
+                <button onclick="openTab('filosofia', this)" class="tab-btn pb-2 font-bold text-slate-300 hover:text-white transition-all text-sm tracking-wide">✨ Filosofía</button>
+                <button onclick="openTab('potencia', this)" class="tab-btn pb-2 font-bold text-slate-300 hover:text-white transition-all text-sm tracking-wide">⚡ Potencia</button>
+                <button onclick="openTab('motor', this)" class="tab-btn pb-2 font-bold text-slate-300 hover:text-white transition-all text-sm tracking-wide">⚙️ Simulador</button>
+            </div>
+            <div class="flex-1 hidden md:flex justify-end">
+                <button onclick="openTab('descargas', document.querySelectorAll('.tab-btn')[0])" class="px-5 py-2 bg-white/5 border border-white/10 rounded-lg text-xs font-bold text-cyan-400 hover:bg-cyan-500 hover:text-black transition-colors shadow-[0_0_10px_rgba(0,240,255,0.3)]">
+                    📥 Descargas
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-4 max-w-7xl mx-auto w-full relative z-10 min-h-[85vh] flex items-start">
+
+        <section id="inicio" class="tab-content active flex flex-col items-center justify-start pt-16 md:pt-24 text-center">
+            <h1 class="text-6xl md:text-[6rem] font-black text-white tracking-tighter mb-8 leading-none drop-shadow-[0_5px_15px_rgba(0,240,255,0.2)]">
+                EL CÓDIGO <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">DEL COSMOS.</span>
+            </h1>
+            <p class="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto mb-10 font-light leading-relaxed">
+                Programar es el arte de estructurar el caos. Astrax fue concebido para mentes disruptivas que buscan trascender lo convencional; un ecosistema lógico donde la sintaxis fluye como constelaciones y el motor de compilación teje el espacio-tiempo de la memoria. Libera tu imaginación y descubre un lenguaje que no conoce gravedad.
+            </p>
+            <button onclick="openTab('motor', document.querySelectorAll('.tab-btn')[3])" class="px-8 py-4 bg-cyan-500 text-slate-900 font-extrabold rounded-xl hover:bg-cyan-400 hover:scale-105 transition-all text-lg shadow-[0_0_25px_rgba(0,240,255,0.6)] uppercase tracking-wider mt-4">
+                Explorar el Motor
+            </button>
+        </section>
+
+        <section id="filosofia" class="tab-content">
+            <div class="text-center mb-12 mt-10 w-full">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-6">El Idioma del Universo</h2>
+                <p class="text-lg text-slate-300 max-w-3xl mx-auto">Reemplazamos la jerga técnica tradicional por conceptos astronómicos. Esto hace que Astrax sea altamente intuitivo y semánticamente hermoso.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl mx-auto">
+                <div class="glass-panel p-6 rounded-2xl hover:border-cyan-400 transition-colors group">
+                    <div class="text-4xl mb-4 group-hover:-translate-y-2 transition-transform">✨</div>
+                    <h3 class="text-cyan-400 font-bold text-2xl mb-2">zen</h3>
+                    <p class="text-slate-400 text-sm">El origen de la materia. Instancia variables dinámicas en memoria preparándolas para recibir flujo de datos.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl hover:border-rose-500 transition-colors group">
+                    <div class="text-4xl mb-4 group-hover:-translate-y-2 transition-transform">💥</div>
+                    <h3 class="text-rose-500 font-bold text-2xl mb-2">nova</h3>
+                    <p class="text-slate-400 text-sm">Explosión lógica. Evalúa condiciones booleanas para bifurcar el flujo de ejecución (If/Else).</p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl hover:border-cyan-400 transition-colors group">
+                    <div class="text-4xl mb-4 group-hover:-translate-y-2 transition-transform">🪐</div>
+                    <h3 class="text-cyan-400 font-bold text-2xl mb-2">orbit</h3>
+                    <p class="text-slate-400 text-sm">Gravedad repetitiva. Inicializa bucles cíclicos que iteran sobre colecciones o condiciones.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl hover:border-rose-500 transition-colors group">
+                    <div class="text-4xl mb-4 group-hover:-translate-y-2 transition-transform">🌌</div>
+                    <h3 class="text-rose-500 font-bold text-2xl mb-2">nebula</h3>
+                    <p class="text-slate-400 text-sm">Cuna estelar. Declara funciones reutilizables que protegen sus variables internas mediante aislamiento.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl hover:border-cyan-400 transition-colors group">
+                    <div class="text-4xl mb-4 group-hover:-translate-y-2 transition-transform">📡</div>
+                    <h3 class="text-cyan-400 font-bold text-2xl mb-2">pulse</h3>
+                    <p class="text-slate-400 text-sm">Transmisión de ondas. Envía datos y resultados directamente a la terminal o pantalla del usuario (Print).</p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl hover:border-rose-500 transition-colors group">
+                    <div class="text-4xl mb-4 group-hover:-translate-y-2 transition-transform">🛑</div>
+                    <h3 class="text-rose-500 font-bold text-2xl mb-2">halt</h3>
+                    <p class="text-slate-400 text-sm">Agotamiento térmico. Detiene instantáneamente un ciclo iterativo o finaliza la ejecución de un bloque lógico.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="potencia" class="tab-content">
+            <div class="glass-panel rounded-3xl p-8 md:p-12 mt-10 border-t-2 border-t-cyan-500 w-full max-w-6xl mx-auto">
+                <h2 class="text-4xl font-extrabold text-white mb-6 text-center">Ingeniería para el Mundo Real</h2>
+                <p class="text-lg text-slate-300 mb-10 text-center max-w-4xl mx-auto">
+                    Astrax posee la robustez necesaria para desarrollar sistemas universales. Como prueba de concepto, observamos la estructuración de un sistema de Autenticación de Usuarios (Login) implementando ciclos, arreglos y aislamiento algorítmico.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold text-rose-400 mb-4">🛡️ Recorrido de Colecciones</h3>
+                        <p class="text-slate-400 mb-6">Mediante la instrucción <code class="text-cyan-300">orbitx</code>, el intérprete puede iterar dinámicamente sobre arreglos para validar credenciales en tiempo de ejecución sin comprometer la memoria.</p>
+                        
+                        <h3 class="text-2xl font-bold text-cyan-400 mb-4">⚡ Seguridad y Aislamiento</h3>
+                        <p class="text-slate-400 mb-6">Al encapsular el validador dentro de una <code class="text-cyan-300">nebula</code>, garantizamos que las variables locales iteradoras no contaminen el estado del programa principal.</p>
+                    </div>
+                    
+                    <div class="bg-[#05020a] p-6 rounded-xl border border-slate-700 shadow-inner overflow-hidden relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-400 to-rose-500"></div>
+                        <p class="text-slate-500 mb-4 italic">// Módulo de Autenticación de Usuarios</p>
+                        <p class="text-white mb-1"><span class="text-cyan-400 font-bold">zen</span> usuarios <span class="text-cyan-400 font-bold">flux</span> [<span class="text-yellow-300">"admin"</span>, <span class="text-yellow-300">"invitado"</span>];</p>
+                        <p class="text-white mb-4"><span class="text-cyan-400 font-bold">zen</span> claves <span class="text-cyan-400 font-bold">flux</span> [<span class="text-rose-400">1234</span>, <span class="text-rose-400">0000</span>];</p>
+                        
+                        <p class="text-white"><span class="text-rose-500 font-bold">nebula</span> login(user, pass) :</p>
+                        <p class="text-white ml-4"><span class="text-cyan-400 font-bold">orbitx</span> (<span class="text-cyan-400 font-bold">zen</span> i <span class="text-cyan-400 font-bold">flux</span> <span class="text-rose-400">0</span>; i < <span class="text-rose-400">2</span>; i <span class="text-cyan-400 font-bold">flux</span> i + <span class="text-rose-400">1</span>) :</p>
+                        <p class="text-white ml-8"><span class="text-rose-500 font-bold">nova</span> (usuarios[i] == user) :</p>
+                        <p class="text-white ml-12"><span class="text-rose-500 font-bold">nova</span> (claves[i] == pass) :</p>
+                        <p class="text-white ml-16"><span class="text-cyan-400 font-bold">pulse</span> <span class="text-yellow-300">"Acceso concedido."</span>;</p>
+                        <p class="text-white ml-16"><span class="text-rose-500 font-bold">halt</span></p>
+                        <p class="text-white ml-12"><span class="text-rose-500 font-bold">void</span> :</p>
+                        <p class="text-white ml-16"><span class="text-cyan-400 font-bold">pulse</span> <span class="text-yellow-300">"Contraseña errónea."</span>;</p>
+                        <p class="text-white ml-16"><span class="text-rose-500 font-bold">halt</span></p>
+                        <p class="text-white ml-4"><span class="text-cyan-400 font-bold">pulse</span> <span class="text-yellow-300">"Usuario no existe."</span>;</p>
+                        <p class="text-white"><span class="text-rose-500 font-bold">halt</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="motor" class="tab-content w-full">
+            <div class="text-center mt-6 mb-10 w-full">
+                <h2 class="text-4xl md:text-5xl font-black text-white mb-4">El Motor de Compilación</h2>
+                <p class="text-slate-300 text-lg">Observa analíticamente cómo el intérprete de Astrax desfragmenta el código fuente paso a paso.</p>
+            </div>
+
+            <div class="glass-panel p-8 rounded-3xl border border-slate-600 max-w-6xl mx-auto w-full">
+                <div class="bg-black p-5 rounded-xl mb-8 border border-cyan-500/30 flex justify-between items-center shadow-lg">
+                    <code class="text-xl md:text-2xl text-white font-mono"><span class="text-cyan-400">zen</span> energia <span class="text-cyan-400">flux</span> <span class="text-rose-400">100</span>;</code>
+                    <button onclick="runAstSimulation()" id="runBtn" class="bg-rose-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-rose-500 transition-colors shadow-[0_0_15px_rgba(255,0,60,0.5)] ml-4 text-lg">Ejecutar ➔</button>
+                </div>
+
+                <div class="flex flex-col md:flex-row justify-between gap-8 w-full">
+                    <div id="box-lexer" class="ast-step bg-[#0a0514] border border-slate-700 p-8 rounded-2xl w-full md:w-1/3 flex flex-col min-h-[140px]">
+                        <div class="w-10 h-10 bg-cyan-500/20 text-cyan-400 rounded-full flex items-center justify-center mb-4 text-xl font-black border border-cyan-500">1</div>
+                        <h3 class="text-cyan-400 font-bold text-xl mb-4 border-b border-slate-700 pb-2">Lexer (Tokens)</h3>
+                        <div id="out-lexer" class="flex-1 flex flex-wrap gap-2 content-start"></div>
+                    </div>
+                    
+                    <div id="box-parser" class="ast-step bg-[#0a0514] border border-slate-700 p-8 rounded-2xl w-full md:w-1/3 flex flex-col min-h-[140px]">
+                        <div class="w-10 h-10 bg-rose-500/20 text-rose-500 rounded-full flex items-center justify-center mb-4 text-xl font-black border border-rose-500">2</div>
+                        <h3 class="text-rose-400 font-bold text-xl mb-4 border-b border-slate-700 pb-2">Parser (AST)</h3>
+                        <div id="out-parser" class="flex-1 font-mono text-base text-slate-300"></div>
+                    </div>
+
+                    <div id="box-interpreter" class="ast-step bg-[#0a0514] border border-slate-700 p-8 rounded-2xl w-full md:w-1/3 flex flex-col min-h-[140px]">
+                        <div class="w-10 h-10 bg-cyan-500/20 text-cyan-400 rounded-full flex items-center justify-center mb-4 text-xl font-black border border-cyan-500">3</div>
+                        <h3 class="text-cyan-400 font-bold text-xl mb-4 border-b border-slate-700 pb-2">Intérprete Core</h3>
+                        <div id="out-interpreter" class="flex-1 font-mono text-base"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="descargas" class="tab-content w-full">
+            <div class="text-center mb-12 w-full">
+                <h2 class="text-4xl md:text-5xl font-black text-white mb-4">Despliegue Local</h2>
+                <p class="text-lg text-slate-300">Descarga el ejecutable nativo del motor y la documentación de ingeniería.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl mx-auto">
+                <div class="glass-panel p-10 rounded-3xl w-full flex flex-col h-full items-center text-center border-t-4 border-t-cyan-500 hover:bg-white/5 transition-all shadow-xl">
+                    <div class="text-6xl mb-6 drop-shadow-[0_0_15px_rgba(0,240,255,0.6)]">💻</div>
+                    <h3 class="font-black text-white text-2xl mb-2">Astrax IDE Setup</h3>
+                    <p class="text-slate-400 text-sm flex-grow">Entorno de desarrollo integrado para Windows. Incluye resaltado de sintaxis nativo y monitor de rendimiento CyberGraph.</p>
+                    <div class="mt-auto w-full pt-8">
+                        <a href="/Astrax_Setup.exe" download="Astrax_Setup.exe" class="block w-full py-4 bg-cyan-500 text-slate-900 font-extrabold rounded-xl hover:bg-cyan-400 transition-all text-lg shadow-[0_0_15px_rgba(0,240,255,0.4)]">
+                            Descargar (.EXE)
+                        </a>
+                    </div>
+                </div>
+                <div class="glass-panel p-10 rounded-3xl w-full flex flex-col h-full items-center text-center border-t-4 border-t-blue-500 hover:bg-white/5 transition-all shadow-xl">
+                    <div class="text-6xl mb-6 drop-shadow-[0_0_15px_rgba(0,100,255,0.6)]">📄</div>
+                    <h3 class="font-black text-white text-2xl mb-2">Manual Técnico</h3>
+                    <p class="text-slate-400 text-sm flex-grow">Documentación oficial. Especificaciones completas de gramática, tipos dinámicos, operadores y arquitectura del intérprete.</p>
+                    <div class="mt-auto w-full pt-8">
+                        <a href="/Manual_Astrax_Cosmico_Final.pdf" download="Manual_Astrax_Cosmico.pdf" class="block w-full py-4 border-2 border-blue-500 text-blue-400 font-extrabold rounded-xl hover:bg-blue-500 hover:text-white transition-all text-lg">
+                            Descargar PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="w-full text-center py-6 glass-panel border-t border-white/5 border-b-0 border-x-0 relative z-10 mt-auto">
+        <p class="text-white text-sm md:text-base font-medium mb-1">
+            Arquitectura Lógica desarrollada por <strong class="text-cyan-400 font-bold tracking-wide">Brayant Jared Dominguez Montero</strong>  & Alexander Bautista
+        </p>
+        <p class="text-rose-500 font-black text-xs md:text-sm uppercase tracking-[0.2em]">
+            Tecnológico Nacional de México
+        </p>
+    </footer>
+
+    <script is:inline>
+        // --- 1. LÓGICA DE NAVE MULTIDIRECCIONAL Y SALTO ---
+        // Generar una ruta aleatoria para la nave
+        function setRandomTrajectory(ship) {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const offset = 300; // Distancia fuera de la pantalla
+            const edge = Math.floor(Math.random() * 4);
+            let sx, sy, ex, ey;
+            
+            // 0: Desde Izquierda, 1: Desde Derecha, 2: Desde Arriba, 3: Desde Abajo
+            if (edge === 0) {
+                sx = -offset; sy = Math.random() * h;
+                ex = w + offset; ey = Math.random() * h;
+            } else if (edge === 1) {
+                sx = w + offset; sy = Math.random() * h;
+                ex = -offset; ey = Math.random() * h;
+            } else if (edge === 2) {
+                sx = Math.random() * w; sy = -offset;
+                ex = Math.random() * w; ey = h + offset;
+            } else {
+                sx = Math.random() * w; sy = h + offset;
+                ex = Math.random() * w; ey = -offset;
+            }
+            
+            // Calcular el ángulo de rotación de la nave
+            // Añadimos +90 grados porque el SVG de la nave apunta originalmente hacia arriba (Eje Y negativo)
+            const angle = (Math.atan2(ey - sy, ex - sx) * 180 / Math.PI) + 90;
+            
+            // Asignar variables CSS
+            ship.style.setProperty('--start-x', sx + 'px');
+            ship.style.setProperty('--start-y', sy + 'px');
+            ship.style.setProperty('--end-x', ex + 'px');
+            ship.style.setProperty('--end-y', ey + 'px');
+            ship.style.setProperty('--rot', angle + 'deg');
+            
+            // Guardar en el HTML para cálculos futuros
+            ship.dataset.sx = sx;
+            ship.dataset.sy = sy;
+            ship.dataset.ex = ex;
+            ship.dataset.ey = ey;
+        }
+
+        // Configurar ruta al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            const ship = document.getElementById('player-ship');
+            setRandomTrajectory(ship);
+        });
+
+        // Activación del Hyperdrive
+        function warpJump() {
+            const ship = document.getElementById('player-ship');
+            const flame = document.getElementById('flame');
+            
+            if(ship.dataset.warping === 'true') return;
+            ship.dataset.warping = 'true';
+
+            // 1. Obtener matriz exacta de donde está y congelar
+            const compStyle = window.getComputedStyle(ship);
+            const matrix = compStyle.transform; 
+            
+            ship.style.animation = 'none';
+            ship.style.transform = matrix;
+            void ship.offsetWidth; // Forzar repintado para evitar brincos
+
+            // 2. Transición visible e intensa (2.5 segundos)
+            ship.style.transition = 'all 2.5s cubic-bezier(0.5, 0, 1, 1)';
+            ship.style.filter = 'drop-shadow(0 0 60px #00f0ff) brightness(2.5)';
+            flame.style.fill = '#ffffff'; 
+            
+            // 3. Disparar nave más allá de su punto de salida original
+            const sx = parseFloat(ship.dataset.sx);
+            const sy = parseFloat(ship.dataset.sy);
+            const ex = parseFloat(ship.dataset.ex);
+            const ey = parseFloat(ship.dataset.ey);
+            
+            // Calcular un punto infinito en la misma dirección
+            const farX = ex + (ex - sx) * 2;
+            const farY = ey + (ey - sy) * 2;
+
+            ship.style.transform = `translate(${farX}px, ${farY}px) rotate(var(--rot)) scale(0.65)`;
+
+            // 4. Reiniciar y reaparecer de un lado nuevo
+            setTimeout(() => {
+                ship.style.transition = 'none';
+                ship.style.opacity = '0';
+                ship.style.filter = 'drop-shadow(0 0 10px rgba(0, 240, 255, 0.5))';
+                flame.style.fill = '#ff003c'; 
+                
+                // Nueva coordenada aleatoria (Izquierda, Derecha, Arriba o Abajo)
+                setRandomTrajectory(ship);
+                
+                ship.style.transform = ''; 
+                void ship.offsetWidth;
+                
+                ship.style.animation = 'fly-by 25s linear infinite';
+
+                setTimeout(() => {
+                    ship.style.opacity = '0.8';
+                    ship.dataset.warping = 'false';
+                }, 100);
+
+            }, 2500); // Mismo tiempo que la transición
+        }
+
+        // --- 2. LÓGICA DE PESTAÑAS ---
+        function openTab(tabId, btnElement) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            if(btnElement && btnElement.classList.contains('tab-btn')) btnElement.classList.add('active');
+        }
+
+        // --- 3. LÓGICA DEL SIMULADOR AST (LENTO Y DIDÁCTICO) ---
+        function runAstSimulation() {
+            const btn = document.getElementById('runBtn');
+            const boxLexer = document.getElementById('box-lexer');
+            const boxParser = document.getElementById('box-parser');
+            const boxInterpreter = document.getElementById('box-interpreter');
+            
+            const outLexer = document.getElementById('out-lexer');
+            const outParser = document.getElementById('out-parser');
+            const outInterpreter = document.getElementById('out-interpreter');
+
+            btn.disabled = true;
+            btn.innerText = "Analizando...";
+            boxLexer.classList.remove('ast-glow'); boxParser.classList.remove('ast-glow'); boxInterpreter.classList.remove('ast-glow');
+            outLexer.innerHTML = ''; outParser.innerHTML = ''; outInterpreter.innerHTML = '';
+
+            // Fase 1: Lexer (1 token cada 800ms para explicarlo)
+            setTimeout(() => {
+                boxLexer.classList.add('ast-glow');
+                const tokens = ['[KW: zen]', '[ID: energia]', '[OP: flux]', '[NUM: 100]', '[SYM: ;]'];
+                tokens.forEach((tk, i) => {
+                    setTimeout(() => {
+                        outLexer.innerHTML += `<span class="ast-code-chunk visible">${tk}</span>`;
+                    }, i * 800);
+                });
+            }, 800);
+
+            // Fase 2: Parser (A los 5.5 segundos)
+            setTimeout(() => {
+                boxLexer.classList.remove('ast-glow');
+                boxParser.classList.add('ast-glow');
+                outParser.innerHTML = `
+                    <div class="animate-pulse">
+                        └─ AssignNode<br>
+                        &nbsp;&nbsp;&nbsp;├─ Var: "energia"<br>
+                        &nbsp;&nbsp;&nbsp;└─ Val: 100
+                    </div>`;
+            }, 5500); 
+
+            // Fase 3: Interprete (Efecto Máquina de escribir hacker a los 8.5 seg)
+            setTimeout(() => {
+                boxParser.classList.remove('ast-glow');
+                boxInterpreter.classList.add('ast-glow');
+                
+                outInterpreter.innerHTML = `
+                    <div id="type-line1" class="text-slate-400 italic typing-cursor"></div>
+                    <div id="type-line2" class="text-black font-bold bg-green-400 px-3 py-1 rounded-full text-xs tracking-wider mt-3 hidden w-max shadow-[0_0_10px_rgba(74,222,128,0.5)]">[TABLA DE SÍMBOLOS ACTUALIZADA]</div>
+                    <div id="type-line3" class="text-cyan-300 font-bold text-xl mt-3 typing-cursor hidden"></div>
+                `;
+                
+                const line1 = document.getElementById('type-line1');
+                const line2 = document.getElementById('type-line2');
+                const line3 = document.getElementById('type-line3');
+
+                let text1 = "> Ejecutando Instrucción...";
+                let i = 0;
+                
+                function typeFirstLine() {
+                    if (i < text1.length) {
+                        line1.innerText = text1.substring(0, i + 1);
+                        i++;
+                        setTimeout(typeFirstLine, 50); 
+                    } else {
+                        line1.classList.remove('typing-cursor');
+                        line2.classList.remove('hidden');
+                        line3.classList.remove('hidden');
+                        setTimeout(typeThirdLine, 600); 
+                    }
+                }
+                
+                let text3 = "energia = 100";
+                let j = 0;
+                
+                function typeThirdLine() {
+                    if (j < text3.length) {
+                        line3.innerText = text3.substring(0, j + 1);
+                        j++;
+                        setTimeout(typeThirdLine, 70);
+                    } else {
+                        setTimeout(() => {
+                            line3.classList.remove('typing-cursor');
+                            boxInterpreter.classList.remove('ast-glow');
+                            btn.disabled = false;
+                            btn.innerText = "Ejecutar ➔";
+                        }, 1500);
+                    }
+                }
+                
+                typeFirstLine(); 
+
+            }, 8500);
+        }
+
+        // --- 4. LÓGICA DEL CANVAS ESPACIAL (RED) ---
+        const canvas = document.getElementById('space-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [];
+        let mouse = { x: null, y: null, radius: 100 };
+
+        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+        window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+
+        class Particle {
+            constructor() {
+                this.size = Math.random() * 1.5 + 0.5;
+                this.x = Math.random() * width; this.y = Math.random() * height;
+                this.dirX = (Math.random() * 1) - 0.5; this.dirY = (Math.random() * 1) - 0.5;
+            }
+            update() {
+                if (this.x > width || this.x < 0) this.dirX = -this.dirX;
+                if (this.y > height || this.y < 0) this.dirY = -this.dirY;
+                if (mouse.x && mouse.y) {
+                    let dx = mouse.x - this.x; let dy = mouse.y - this.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < mouse.radius) { this.x -= (dx / dist) * 1.5; this.y -= (dy / dist) * 1.5; }
+                }
+                this.x += this.dirX; this.y += this.dirY;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.fill();
+            }
+        }
+
+        function initCanvas() {
+            particles = []; let pCount = (width * height) / 15000;
+            for (let i = 0; i < pCount; i++) particles.push(new Particle());
+        }
+        function animateCanvas() {
+            requestAnimationFrame(animateCanvas);
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => p.update());
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    let dist = (particles[a].x - particles[b].x)**2 + (particles[a].y - particles[b].y)**2;
+                    if (dist < 12000) {
+                        ctx.strokeStyle = `rgba(0, 240, 255, ${1 - dist/12000})`;
+                        ctx.lineWidth = 0.5; ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y); ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+        initCanvas(); animateCanvas();
+    </script>
+</body>
+</html>
